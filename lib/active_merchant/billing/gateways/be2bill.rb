@@ -60,9 +60,9 @@ module ActiveMerchant #:nodoc:
 
       def add_customer(params, options)
         params[:CLIENTIDENT] = options[:customer]
-        params[:CLIENTUSERAGENT] = options[:client_useragent] || 'Unknown'
-        params[:CLIENTIP] = options[:client_ip] || 'Unknown'
-        params[:CLIENTEMAIL] = options[:client_email] || 'unknown@nofuckingidea.com'
+        params[:CLIENTUSERAGENT] = options[:client_useragent]
+        params[:CLIENTIP] = options[:client_ip]
+        params[:CLIENTEMAIL] = options[:client_email]
       end
 
       def add_description(params, options)
@@ -71,7 +71,7 @@ module ActiveMerchant #:nodoc:
 
       def add_creditcard(params, creditcard)
         params[:CARDCODE] = creditcard.number
-        params[:CARDFULLNAME] = "#{creditcard.first_name || 'Anonymous'}#{creditcard.last_name || 'Anonymous'}"
+        params[:CARDFULLNAME] = "#{creditcard.first_name} #{creditcard.last_name}"
         params[:CARDVALIDITYDATE] = "#{"%02d" % creditcard.month}-#{"%02d" % (creditcard.year % 100)}"
         params[:CARDCVV] = creditcard.verification_value
       end
