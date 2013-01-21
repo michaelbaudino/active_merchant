@@ -588,3 +588,7 @@ wirecard:
 world_pay_gateway:
   login: LOGIN
   password: PASSWORD
+
+be2bill:
+  login: LOGIN
+  password: PASSWORD
