@@ -101,6 +101,76 @@ class Be2billTest < Test::Unit::TestCase
     assert_equal response, 'method=payment&params%5Bkey1%5D=value1&params%5Bkey2%5D=value2&params%5Bkey3%5D=value3'
   end
 
+  def test_response_is_valid
+    # Valid successful response
+    assert @gateway.send(:response_is_valid?, {
+      'EXECCODE'      => '0000',
+      'OPERATIONTYPE' => 'payment',
+      'MESSAGE'       => 'Message a caractere informatif',
+      'TRANSACTIONID' => 'AB12345678'
+    })
+    # Valid failure response
+    assert @gateway.send(:response_is_valid?, {
+      'EXECCODE'      => '4001',
+      'OPERATIONTYPE' => 'payment',
+      'MESSAGE'       => 'Message a caractere informatif'
+    })
+    # Invalid response (lacks EXECCODE)
+    assert !@gateway.send(:response_is_valid?, {
+      'OPERATIONTYPE' => 'payment',
+      'MESSAGE'       => 'Message a caractere informatif',
+      'TRANSACTIONID' => 'AB12345678'
+    })
+    # Invalid response (lacks OPERATIONTYPE)
+    assert !@gateway.send(:response_is_valid?, {
+      'EXECCODE'      => '0000',
+      'MESSAGE'       => 'Message a caractere informatif',
+      'TRANSACTIONID' => 'AB12345678'
+    })
+    # Invalid response (lacks MESSAGE)
+    assert !@gateway.send(:response_is_valid?, {
+      'EXECCODE'      => '0000',
+      'OPERATIONTYPE' => 'payment',
+      'TRANSACTIONID' => 'AB12345678'
+    })
+    # Invalid response (lacks TRANSACTIONID while EXECCODE indicates success)
+    assert !@gateway.send(:response_is_valid?, {
+      'EXECCODE'      => '0000',
+      'MESSAGE'       => 'Message a caractere informatif',
+      'OPERATIONTYPE' => 'payment'
+    })
+    # Invalid response (invalid EXECCODE)
+    assert !@gateway.send(:response_is_valid?, {
+      'EXECCODE'      => '000',
+      'OPERATIONTYPE' => 'payment',
+      'MESSAGE'       => 'Message a caractere informatif',
+      'TRANSACTIONID' => 'AB12345678'
+    })
+    # Invalid response (invalid OPERATIONTYPE)
+    assert !@gateway.send(:response_is_valid?, {
+      'EXECCODE'      => '0000',
+      'OPERATIONTYPE' => 'not_an_action',
+      'MESSAGE'       => 'Message a caractere informatif',
+      'TRANSACTIONID' => 'AB12345678'
+    })
+  end
+
+  def test_response_is_success
+    # Successful response
+    assert @gateway.send(:response_is_success?, {
+      'EXECCODE'      => '0000',
+      'OPERATIONTYPE' => 'payment',
+      'MESSAGE'       => 'Message a caractere informatif',
+      'TRANSACTIONID' => 'AB12345678'
+    })
+    # Failure response
+    assert !@gateway.send(:response_is_success?, {
+      'EXECCODE'      => '4001',
+      'OPERATIONTYPE' => 'payment',
+      'MESSAGE'       => 'Message a caractere informatif'
+    })
+  end
+
   def test_successful_purchase
     @gateway.expects(:ssl_post).returns(successful_purchase_response)
     assert response = @gateway.purchase(@amount, @credit_card, @options)
