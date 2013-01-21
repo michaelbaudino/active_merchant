@@ -29,18 +29,22 @@ module ActiveMerchant #:nodoc:
       end
 
       def authorize(money, creditcard, options = {})
+        # TODO
         # commit('authorize', ...)
       end
 
       def capture(money, authorization, options = {})
+        # TODO
         # commit('capture', ...)
       end
 
       def refund(money, reference, options = {})
+        # TODO
         # commit('refund', ...)
       end
 
       def credit(money, identification_or_credit_card, options = {})
+        # TODO
         # commit('credit', ...)
       end
 
