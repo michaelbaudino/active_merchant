@@ -7,7 +7,7 @@ module ActiveMerchant #:nodoc:
       self.homepage_url = 'http://www.be2bill.com/'
       self.supported_countries = ['FR']
       self.supported_cardtypes = [:visa, :master, :american_express]
-      self.default_currency = :eur
+      self.default_currency = :EUR
       self.money_format = :cents
       self.test_url = 'https://secure-test.be2bill.com/front/service/rest/process.php'
       self.live_url = 'https://secure.be2bill.com/front/service/rest/process.php'
