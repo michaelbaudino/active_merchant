@@ -16,6 +16,11 @@
 * Authorize.Net CIM: Allow omitting card expiration date [shanebonham]
 * Authorize.Net CIM: Add support for extraOptions to createCustomerProfileTransaction [tpiekos]
 * Add NETPAY gateway [samlown]
+* Balanced gateway: Add amount to the refund method signature [ntalbott]
+* Orbital gateway: Fix void method signature [aprofeit, ntalbott]
+* Eway Managed: Add 'query_customer' API as #retrieve [cdaloisio]
+* NetPay: Fix the signature for void [duff]
+* Cybersource: Add check support [bowmande]
 * Add Be2Bill gateway [michaelbaudino]
 
 == Version 1.29.3 (December 7, 2012)
