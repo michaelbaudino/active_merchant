@@ -10,7 +10,7 @@ module ActiveMerchant #:nodoc:
       self.default_currency = :EUR
       self.money_format = :cents
       self.test_url = 'https://secure-test.be2bill.com/front/service/rest/process.php'
-      self.live_url = 'https://secure.be2bill.com/front/service/rest/process.php'
+      self.live_url = 'https://secure-magenta1.be2bill.com/front/service/rest/process.php'
       API_VERSION = '2.0'
 
       def initialize(options = {})
