@@ -22,6 +22,10 @@
 * NetPay: Fix the signature for void [duff]
 * Cybersource: Add check support [bowmande]
 * Add Be2Bill gateway [michaelbaudino]
+* Moneris: Use a capture of $0 for void [ntalbott]
+* PayPal Express integration: Fix received_at time zone [ntalbott]
+* NAB Transact: Add refund capability [nagash]
+* Stripe: Add support for application_fee [duff]
 
 == Version 1.29.3 (December 7, 2012)
 
