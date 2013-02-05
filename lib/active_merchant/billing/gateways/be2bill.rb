@@ -25,6 +25,7 @@ module ActiveMerchant #:nodoc:
         add_customer(params, options)
         add_description(params, options)
         add_creditcard(params, creditcard)
+        add_3dsecure(params, options)
         commit(:payment, params)
       end
 
@@ -74,6 +75,17 @@ module ActiveMerchant #:nodoc:
         params[:CARDFULLNAME] = "#{creditcard.first_name} #{creditcard.last_name}"
         params[:CARDVALIDITYDATE] = "#{"%02d" % creditcard.month}-#{"%02d" % (creditcard.year % 100)}"
         params[:CARDCVV] = creditcard.verification_value
+      end
+
+      def add_3dsecure(params, options)
+        if options[:'3dsecure'].is_a? String and ['yes', 'no'].include? options[:'3dsecure'].downcase
+          params[:'3DSECURE'] = options[:'3dsecure'].downcase
+        elsif [true, false].include? options[:'3dsecure']
+          params[:'3DSECURE'] = (options[:'3dsecure'] ? 'yes' : 'no')
+        end
+        if options[:'3dsecuremode'].is_a? String and ['MAIN', 'POPUP', 'TOP'].include? options[:'3dsecuremode'].upcase
+          params[:'3DSECUREDISPLAYMODE'] = options[:'3dsecuremode'].upcase
+        end
       end
 
       def be2bill_digest(params = {})
