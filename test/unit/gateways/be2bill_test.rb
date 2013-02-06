@@ -173,16 +173,11 @@ class Be2billTest < Test::Unit::TestCase
   def test_response_is_success
     # Successful response
     assert @gateway.send(:response_is_success?, {
-      'EXECCODE'      => '0000',
-      'OPERATIONTYPE' => 'payment',
-      'MESSAGE'       => 'Message a caractere informatif',
-      'TRANSACTIONID' => 'AB12345678'
+      'EXECCODE'      => '0000'
     })
     # Failure response
     assert !@gateway.send(:response_is_success?, {
-      'EXECCODE'      => '4001',
-      'OPERATIONTYPE' => 'payment',
-      'MESSAGE'       => 'Message a caractere informatif'
+      'EXECCODE'      => '4001'
     })
   end
 
