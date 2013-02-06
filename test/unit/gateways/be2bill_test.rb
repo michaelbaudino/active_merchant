@@ -82,12 +82,15 @@ class Be2billTest < Test::Unit::TestCase
   end
 
   def test_add_3dsecure
+    # Valid 3DSecure options
     params = {}
     @gateway.send(:add_3dsecure, params, :'3dsecure' => true, :'3dsecuremode' => 'POPUP')
     assert_equal params, {:'3DSECURE' => 'yes', :'3DSECUREDISPLAYMODE' => 'POPUP'}
+    # Another valid 3DSecure options
     params = {}
     @gateway.send(:add_3dsecure, params, :'3dsecure' => 'yes', :'3dsecuremode' => 'popup')
     assert_equal params, {:'3DSECURE' => 'yes', :'3DSECUREDISPLAYMODE' => 'POPUP'}
+    # Invalid 3DSecure options
     params = {}
     @gateway.send(:add_3dsecure, params, :'3dsecure' => 'Georges', :'3dsecuremode' => 'Abitbol')
     assert_equal params, {}
@@ -180,6 +183,17 @@ class Be2billTest < Test::Unit::TestCase
       'EXECCODE'      => '4001',
       'OPERATIONTYPE' => 'payment',
       'MESSAGE'       => 'Message a caractere informatif'
+    })
+  end
+
+  def test_response_requires_3dsecure
+    # Successful response
+    assert @gateway.send(:response_requires_3dsecure?, {
+      'EXECCODE'      => '0001'
+    })
+    # Failure response
+    assert !@gateway.send(:response_requires_3dsecure?, {
+      'EXECCODE'      => '0000'
     })
   end
 
