@@ -126,7 +126,7 @@ module ActiveMerchant #:nodoc:
       end
 
       def response_is_success?(response)
-        response['EXECCODE'] == '0000' || response['EXECCODE'] == '0001'
+        response['EXECCODE'] == '0000'
       end
 
     end
