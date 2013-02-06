@@ -181,22 +181,26 @@ class Be2billTest < Test::Unit::TestCase
     })
   end
 
-  def test_response_requires_3dsecure
-    # Successful response
-    assert @gateway.send(:response_requires_3dsecure?, {
-      'EXECCODE'      => '0001'
-    })
-    # Failure response
-    assert !@gateway.send(:response_requires_3dsecure?, {
-      'EXECCODE'      => '0000'
-    })
+  def test_be2bill_response_class
+    # Response does require 3DSecure
+    @gateway.expects(:ssl_post).returns(purchase_requires_3dsecure_response)
+    response = @gateway.purchase(@amount, @credit_card, @options)
+    assert_instance_of ActiveMerchant::Billing::Be2billResponse, response
+    assert response.respond_to? :requires_3dsecure?
+    assert response.send(:requires_3dsecure?)
+    # Response does *not* require 3DSecure
+    @gateway.expects(:ssl_post).returns(successful_purchase_response)
+    response = @gateway.purchase(@amount, @credit_card, @options)
+    assert_instance_of ActiveMerchant::Billing::Be2billResponse, response
+    assert response.respond_to? :requires_3dsecure?
+    assert !response.send(:requires_3dsecure?)
   end
 
   def test_successful_purchase
     @gateway.expects(:ssl_post).returns(successful_purchase_response)
     assert response = @gateway.purchase(@amount, @credit_card, @options)
 
-    assert_instance_of ActiveMerchant::Billing::Response, response
+    assert_instance_of ActiveMerchant::Billing::Be2billResponse, response
     assert_success response
     assert response.test?
     assert_equal '0000', response.params['EXECCODE']
@@ -207,7 +211,7 @@ class Be2billTest < Test::Unit::TestCase
     @gateway.expects(:ssl_post).returns(failed_purchase_response)
     assert response = @gateway.purchase(@amount, @credit_card, @options)
 
-    assert_instance_of ActiveMerchant::Billing::Response, response
+    assert_instance_of ActiveMerchant::Billing::Be2billResponse, response
     assert_failure response
     assert response.test?
     assert_match response.params['EXECCODE'], /^[1-9][0-9]{3}$/
@@ -217,6 +221,10 @@ class Be2billTest < Test::Unit::TestCase
 
   def successful_purchase_response
     '{"OPERATIONTYPE":"payment","TRANSACTIONID":"AB12345678","EXECCODE":"0000","MESSAGE":"The transaction has been accepted.","DESCRIPTOR":"Skiwallet"}'
+  end
+
+  def purchase_requires_3dsecure_response
+    '{"OPERATIONTYPE":"payment","TRANSACTIONID":"AB12345678","EXECCODE":"0001","MESSAGE":"The transaction requires 3DSecure authentification.","DESCRIPTOR":"Skiwallet"}'
   end
 
   def failed_purchase_response

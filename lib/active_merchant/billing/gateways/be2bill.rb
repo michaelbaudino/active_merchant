@@ -109,12 +109,12 @@ module ActiveMerchant #:nodoc:
         json_response = ssl_post(url, post_data(action, params))
         response = JSON.parse(json_response)
         if response_is_valid? response
-          Response.new(response_is_success?(response), response['MESSAGE'], response, {
+          Be2billResponse.new(response_is_success?(response), response['MESSAGE'], response, {
           :test          => ActiveMerchant::Billing::Base.mode == :test,
           :authorization => response['TRANSACTIONID']
           })
         else
-          Response.new(false, 'Unprocessable response.')
+          Be2billResponse.new(false, 'Unprocessable response.')
         end
       end
 
@@ -129,11 +129,14 @@ module ActiveMerchant #:nodoc:
         response['EXECCODE'] == '0000'
       end
 
-      def response_requires_3dsecure?(response)
-        response['EXECCODE'] == '0001'
-      end
-
     end
+
+    class Be2billResponse < Response
+      def requires_3dsecure?
+        @params['EXECCODE'] == '0001'
+      end
+    end
+
   end
 end
 
