@@ -129,6 +129,10 @@ module ActiveMerchant #:nodoc:
         response['EXECCODE'] == '0000'
       end
 
+      def response_requires_3dsecure?(response)
+        response['EXECCODE'] == '0001'
+      end
+
     end
   end
 end
